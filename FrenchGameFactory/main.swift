@@ -116,6 +116,8 @@ var currentRound				= 0				// Current round
 var currentTeam				= 0				// Current team playing
 var currentAvatar1			= 0				// Current avatar playing
 var currentAvatar2			= 0				//	Current avatar receiving
+var healthTeam1				= [Int]()		// Avatars' health book to avoid playing dead.
+var healthTeam2				= [Int]()		// Same for team2
 var currentAction:			Actions			// Current action
 var functionLink				= ""				// Used to manage the function chaining
 
@@ -142,9 +144,10 @@ for  indexT in 0...1 {							// 2 teams
 //└────────────────────────────────────────────────────┘
 
 
-//screenSizing()
-//introduction()
+screenSizing()
+introduction()
 mainMenu()
+
 
 
 // Questions pour Brahim

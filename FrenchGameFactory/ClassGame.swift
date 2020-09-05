@@ -9,11 +9,11 @@
 class Game {
 	/*
 	*/
-	var gPoints			= [100,10,5]	//	Default points values for life, damage and care points for a single avatar
+	var gPoints			= [60,20,10]	//	Default points values for life, damage and care points for a single avatar
 	var allocations	= [[Int]]()		// [A][P] Points [P] allocations of Life, damage and care for team's avatars [A]
 	var turnMode		= true			// Turn mode between avatars in a team rotation (true) or free (false).
 	var careMode		= true			// X care points given = X life points lost (true) or not life points lost
-	var extraChance 	= 0			// Number of chances out of 10 of a proposal for an extra
+	var extraChance 	= 0				// Number of chances out of 10 of a proposal for an extra
 	var extraPoints	= 0				// Number of points that can be added or deducted from the avatar's damage points
 	
 	init()
