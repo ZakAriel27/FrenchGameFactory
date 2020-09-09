@@ -13,7 +13,7 @@ enum Actions {
 
 class Round {
 	/*
-	-  Each game consists of several rounds, which are stored in order to consult the progress of the game.
+	-  Each game consists of several rounds, which are stored in order to consult the progress during the game.
 	-  Index of each team and avatar is memorized as well as the different information related to the round.
 	*/
 	
@@ -31,7 +31,9 @@ class Round {
 	let lifeA2:		[Int]			// Array of remaining health points for team2 avatars at the end of the round
 	
 	init(_ order: Int, _ token: Int, _ indexA1: Int, _ indexA2: Int, _ action: Actions, _ points: Int, _ xPoints: Int, _ xChoice: Int, _ lifeT1: Int, _ lifeT2: Int, _ lifeA1: [Int], _ lifeA2: [Int])
+		//
 	{
+		// This function is called each time a round is finished to store the corresponding log
 		self.order		= order
 		self.token		= token
 		self.indexA1	= indexA1
@@ -48,30 +50,28 @@ class Round {
 	
 	func roundLine() -> String
 	{
-		// This function return a formated string for the display
+		// This function return a formated string in fixed lenght for the display
 		let order		= String("   " + String(self.order)).suffix(3)
-		let action1		= (self.token == 0 ? " ◀━ " : "    ")
-		let action2		= (self.token == 1 ? " ━▶ " : "    ")
+		let direction	= (self.token == 0 ? (self.action == .attack ? " ━▶  " : "◀━▶  ") : (self.action == .attack ? "  ◀━ " : "  ◀━▶"))
 		let action		= (self.action == .attack ? "A" : "C")
 		let AvatarT1	= "\(self.indexA1 + 1)"
 		let AvatarT2	= "\(self.indexA2 + 1)"
-		let points		= String("   " + String(self.points)).suffix(3)
-		let xPoints		= (self.xPoints == 0 ? "   " : String("   " + String(self.xPoints)).suffix(3))
-		let xChoice		= (self.xChoice == 1 ? "/Y" : (self.xChoice == 0 ? "/N" : "  "))
-		let lifeT1		= String("   " + String(self.lifeT1)).suffix(3)
-		let lifeT2		= String("   " + String(self.lifeT2)).suffix(3)
-		let lifeT1A1	= String("   " + String(self.lifeA1[0])).suffix(3)
-		let lifeT1A2	= String("   " + String(self.lifeA1[1])).suffix(3)
-		let lifeT1A3	= String("   " + String(self.lifeA1[2])).suffix(3)
-		let lifeT2A1	= String("   " + String(self.lifeA2[0])).suffix(3)
-		let lifeT2A2	= String("   " + String(self.lifeA2[1])).suffix(3)
-		let lifeT2A3	= String("   " + String(self.lifeA2[2])).suffix(3)
+		let points		= String("  " + String(self.points)).suffix(3)
+		let xPoints		= (self.xPoints == 0 ? "   " : String("  " + String(self.xPoints)).suffix(3))
+		let xChoice		= (self.xChoice == 1 ? ":Y" : (self.xChoice == 0 ? ":N" : "  "))
+		let lifeT1		= (self.token == 0 && self.action == .attack) || (self.token == 1 && self.action == .care) ? "   " : String("  " + String(self.lifeT1)).suffix(3)
+		let lifeT2		= (self.token == 1 && self.action == .attack) || (self.token == 0 && self.action == .care) ? "   " : String("  " + String(self.lifeT2)).suffix(3)
+		let lifeT1A1	= (self.token == 0 && self.action == .attack) || (self.token == 1 && self.action == .care) ? "   " : String("  " + String(self.lifeA1[0])).suffix(3)
+		let lifeT1A2	= (self.token == 0 && self.action == .attack) || (self.token == 1 && self.action == .care) ? "   " : String("  " + String(self.lifeA1[1])).suffix(3)
+		let lifeT1A3	= (self.token == 0 && self.action == .attack) || (self.token == 1 && self.action == .care) ? "   " : String("  " + String(self.lifeA1[2])).suffix(3)
+		let lifeT2A1	= (self.token == 1 && self.action == .attack) || (self.token == 0 && self.action == .care) ? "   " : String("  " + String(self.lifeA2[0])).suffix(3)
+		let lifeT2A2	= (self.token == 1 && self.action == .attack) || (self.token == 0 && self.action == .care) ? "   " : String("  " + String(self.lifeA2[1])).suffix(3)
+		let lifeT2A3	= (self.token == 1 && self.action == .attack) || (self.token == 0 && self.action == .care) ? "   " : String("  " + String(self.lifeA2[2])).suffix(3)
 		
 		var label	= ""
-		label =  "│ \(lifeT1) │ \(lifeT1A1) │ \(lifeT1A2) │ \(lifeT1A3) │\(action1)│ \(order)"
-		label += " │ \(action) │ \(AvatarT1) │ \(AvatarT2) │ \(points) │ \(xPoints)\(xChoice)"
-		label += " │\(action2)│ \(lifeT2) │ \(lifeT2A1) │ \(lifeT2A2) │ \(lifeT2A3) │"
-		//	"│ T.1 │ A.1 │ A.2 │ A.3 │ ◀━ │ Rnd │A/C│Avatars│ Pts │ Extra │ ━▶ │ T.2 │ A.1 │ A.2 │ A.3 │")
+		label =  "│ \(order) │ \(action) │ \(AvatarT1) │\(direction)│ \(AvatarT2) │ \(points)"
+		label += " │ \(xPoints)\(xChoice) │ │ \(lifeT1)   \(lifeT1A1)   \(lifeT1A2)"
+		label += "   \(lifeT1A3) │ │ \(lifeT2)   \(lifeT2A1)   \(lifeT2A2)   \(lifeT2A3) │"
 		return label
 	}
 	
@@ -79,14 +79,14 @@ class Round {
 
 func roundLine0() -> String
 {
+	// This function is called to insert a first line in the log, corresponding to the values before the first round.
 	let lifePoints: [Int]	= game.gameLifePoints()
 	var lifeStrings			= [String]()
 	for value in lifePoints {
 		lifeStrings.append(String(String("   " + String(value)).suffix(3)))
 	}
-	var label	=  "│ \(lifeStrings[0]) │ \(lifeStrings[1]) │ \(lifeStrings[2]) │ \(lifeStrings[3])"
-	label 		+= " │    │   0 │   │   │   │     │       │    │ "
-	label 		+= "\(lifeStrings[0]) │ \(lifeStrings[1]) │ \(lifeStrings[2]) │ \(lifeStrings[3]) │"
+	var label	=  "│   0 │   │   │     │   │     │       │ │ \(lifeStrings[0])   \(lifeStrings[1])   \(lifeStrings[2])   \(lifeStrings[3])"
+	label 		+= " │ │ \(lifeStrings[0])   \(lifeStrings[1])   \(lifeStrings[2])   \(lifeStrings[3]) │"
 	return label
 }
 

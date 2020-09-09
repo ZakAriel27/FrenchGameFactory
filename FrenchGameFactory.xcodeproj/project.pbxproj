@@ -122,7 +122,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1160;
-				LastUpgradeCheck = 1160;
+				LastUpgradeCheck = 1170;
 				ORGANIZATIONNAME = "Pascal Diamand";
 				TargetAttributes = {
 					50C195E124F93F17001B7491 = {
@@ -287,6 +287,7 @@
 		50C195EA24F93F17001B7491 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 296U3QMVR2;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -298,6 +299,7 @@
 		50C195EB24F93F17001B7491 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 296U3QMVR2;
 				ENABLE_HARDENED_RUNTIME = YES;

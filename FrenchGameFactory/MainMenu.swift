@@ -15,13 +15,12 @@ func displayMainMenu()
 	// Display
 	screenRefresh()
 	print()
-	print("􀂒────────────────────────────────────────􀂒")
-	print("│ 􀂴uit            Main Menu         􀂢elp │")
-	print("􀂒────────────────────────────────────────􀂒")
-	print("│              􀃊 􀄫 Introduction          │")
-	print("│              􀃌 􀄫 Game                  │")
-	print("􀂒────────────────────────────────────────􀂒")
-	print()
+	print("􀂒──────────────────────────────────────────􀂒")
+	print("│ 􀂴uit             Main Menu          􀂢elp │")
+	print("􀂒──────────────────────────────────────────􀂒")
+	print("│               􀃊 􀄫 Introduction           │")
+	print("│               􀃌 􀄫 Game                   │")
+	print("􀂒──────────────────────────────────────────􀂒")
 }
 
 //┌────────────────────────────────────────────────────┐
@@ -30,35 +29,40 @@ func displayMainMenu()
 
 func mainMenu()
 {
-	var status = true
-	var visible = false
+	var status		= true	// Flag to quit the loo
+	var visible		= false	// Flag to refresh the display
 	while status {
+		while functionLink != "" {			// Manages redirection requests following the end of an action (setting or game played)
+			if functionLink == "Play" {
+					gamePlay()
+				} else if functionLink == "Setting" {
+					gameParameters()
+				}
+		}
 		if !visible {
 			displayMainMenu()
-			visible = true
+			visible	= true
 		}
-		print("Press the key corresponding to your choice (􀃊 􀃌 􀂢 􀂴): ", terminator:"")
+		print("\nPress the key corresponding to your choice (􀃊 􀃌 􀂢 􀂴): ", terminator:"")
 		let choiceNum = getKeyPress()
 		if [1,2,104,113].contains(choiceNum) {
 			switch choiceNum {
 				case 1: // Introduction
 					introduction()
-					visible = false
+					visible	= false
 				case 2: // Game
 					gameParameters()
-					if functionLink == "Play" {
-						gamePlay()
-					}
-					visible = false
+					visible	= false
 				case 104: // Help
+					displayMainMenu()
 					helps.helpDisplay(3)
 				case 113: // Quit
 					screenRefresh()
 					print("\nSee you soon to the French Game Factory!")
 					print()
-					status = false
+					status	= false
 				default:
-					print("Seems we have a bug at mainMenu()")
+					break
 			}
 		} else {
 			print()
