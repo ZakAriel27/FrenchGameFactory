@@ -1,5 +1,5 @@
 //
-//  ClassTeam.swift
+//  Team.swift
 //  FrenchGameFactory
 //
 //  Created by Pascal Diamand on 28/08/2020.
@@ -53,8 +53,8 @@ class Team {
 		let space				= String(repeating: " ", count: 12)
 		var teamAvatarsNWDC	= [String]()
 		for avatar in self.avatars {
-			let text = String(String("\(avatar.nickName)-\(avatar.weapon)(-\(avatar.aPoints[1])/+\(avatar.aPoints[2]))" + space).prefix(30))
-			teamAvatarsNWDC.append(text)
+			let item = String(String("\(avatar.nickName)-\(avatar.weapon)(-\(avatar.aPoints[1])/+\(avatar.aPoints[2]))" + space).prefix(30))
+			teamAvatarsNWDC.append(item)
 		}
 		return teamAvatarsNWDC
 	}

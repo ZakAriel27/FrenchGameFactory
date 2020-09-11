@@ -9,15 +9,15 @@
 /* Begin PBXBuildFile section */
 		50C195E624F93F17001B7491 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195E524F93F17001B7491 /* main.swift */; };
 		50C195ED24F94256001B7491 /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195EC24F94256001B7491 /* MainMenu.swift */; };
-		50C195F124F94A27001B7491 /* ClassWeapon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195F024F94A27001B7491 /* ClassWeapon.swift */; };
-		50C195F324F94ADF001B7491 /* ClassTeam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195F224F94ADF001B7491 /* ClassTeam.swift */; };
-		50C195F524F94CBB001B7491 /* ClassAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195F424F94CBB001B7491 /* ClassAvatar.swift */; };
-		50C195F724F94E80001B7491 /* ClassGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195F624F94E80001B7491 /* ClassGame.swift */; };
-		50C195F924F94F47001B7491 /* ClassRound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195F824F94F47001B7491 /* ClassRound.swift */; };
+		50C195F124F94A27001B7491 /* Weapon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195F024F94A27001B7491 /* Weapon.swift */; };
+		50C195F324F94ADF001B7491 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195F224F94ADF001B7491 /* Team.swift */; };
+		50C195F524F94CBB001B7491 /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195F424F94CBB001B7491 /* Avatar.swift */; };
+		50C195F724F94E80001B7491 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195F624F94E80001B7491 /* Game.swift */; };
+		50C195F924F94F47001B7491 /* Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195F824F94F47001B7491 /* Round.swift */; };
 		50C195FD24F9514B001B7491 /* GamePlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195FC24F9514B001B7491 /* GamePlay.swift */; };
 		50C195FF24F95176001B7491 /* GameParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195FE24F95176001B7491 /* GameParameters.swift */; };
 		50C1960124F95194001B7491 /* RoundsLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C1960024F95194001B7491 /* RoundsLog.swift */; };
-		50C1960524FAB003001B7491 /* ClassHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C1960424FAB003001B7491 /* ClassHelp.swift */; };
+		50C1960524FAB003001B7491 /* Help.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C1960424FAB003001B7491 /* Help.swift */; };
 		50C1960924FAEC95001B7491 /* Introduction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C1960824FAEC95001B7491 /* Introduction.swift */; };
 /* End PBXBuildFile section */
 
@@ -37,15 +37,15 @@
 		50C195E224F93F17001B7491 /* FrenchGameFactory */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FrenchGameFactory; sourceTree = BUILT_PRODUCTS_DIR; };
 		50C195E524F93F17001B7491 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		50C195EC24F94256001B7491 /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
-		50C195F024F94A27001B7491 /* ClassWeapon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassWeapon.swift; sourceTree = "<group>"; };
-		50C195F224F94ADF001B7491 /* ClassTeam.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassTeam.swift; sourceTree = "<group>"; };
-		50C195F424F94CBB001B7491 /* ClassAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassAvatar.swift; sourceTree = "<group>"; };
-		50C195F624F94E80001B7491 /* ClassGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassGame.swift; sourceTree = "<group>"; };
-		50C195F824F94F47001B7491 /* ClassRound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassRound.swift; sourceTree = "<group>"; };
+		50C195F024F94A27001B7491 /* Weapon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weapon.swift; sourceTree = "<group>"; };
+		50C195F224F94ADF001B7491 /* Team.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
+		50C195F424F94CBB001B7491 /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
+		50C195F624F94E80001B7491 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		50C195F824F94F47001B7491 /* Round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Round.swift; sourceTree = "<group>"; };
 		50C195FC24F9514B001B7491 /* GamePlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePlay.swift; sourceTree = "<group>"; };
 		50C195FE24F95176001B7491 /* GameParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameParameters.swift; sourceTree = "<group>"; };
 		50C1960024F95194001B7491 /* RoundsLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundsLog.swift; sourceTree = "<group>"; };
-		50C1960424FAB003001B7491 /* ClassHelp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassHelp.swift; sourceTree = "<group>"; };
+		50C1960424FAB003001B7491 /* Help.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Help.swift; sourceTree = "<group>"; };
 		50C1960824FAEC95001B7491 /* Introduction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Introduction.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,6 +60,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		50BB4469250AE4E500306324 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				50C195F224F94ADF001B7491 /* Team.swift */,
+				50C195F424F94CBB001B7491 /* Avatar.swift */,
+				50C195F024F94A27001B7491 /* Weapon.swift */,
+				50C195F624F94E80001B7491 /* Game.swift */,
+				50C195F824F94F47001B7491 /* Round.swift */,
+				50C1960424FAB003001B7491 /* Help.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		50C195D924F93F17001B7491 = {
 			isa = PBXGroup;
 			children = (
@@ -80,17 +93,12 @@
 			isa = PBXGroup;
 			children = (
 				50C195E524F93F17001B7491 /* main.swift */,
-				50C1960824FAEC95001B7491 /* Introduction.swift */,
 				50C195EC24F94256001B7491 /* MainMenu.swift */,
+				50C1960824FAEC95001B7491 /* Introduction.swift */,
 				50C195FE24F95176001B7491 /* GameParameters.swift */,
 				50C195FC24F9514B001B7491 /* GamePlay.swift */,
 				50C1960024F95194001B7491 /* RoundsLog.swift */,
-				50C195F624F94E80001B7491 /* ClassGame.swift */,
-				50C195F224F94ADF001B7491 /* ClassTeam.swift */,
-				50C195F424F94CBB001B7491 /* ClassAvatar.swift */,
-				50C195F024F94A27001B7491 /* ClassWeapon.swift */,
-				50C195F824F94F47001B7491 /* ClassRound.swift */,
-				50C1960424FAB003001B7491 /* ClassHelp.swift */,
+				50BB4469250AE4E500306324 /* Model */,
 			);
 			path = FrenchGameFactory;
 			sourceTree = "<group>";
@@ -153,17 +161,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50C195F324F94ADF001B7491 /* ClassTeam.swift in Sources */,
-				50C195F924F94F47001B7491 /* ClassRound.swift in Sources */,
+				50C195F324F94ADF001B7491 /* Team.swift in Sources */,
+				50C195F924F94F47001B7491 /* Round.swift in Sources */,
 				50C195FF24F95176001B7491 /* GameParameters.swift in Sources */,
-				50C195F124F94A27001B7491 /* ClassWeapon.swift in Sources */,
+				50C195F124F94A27001B7491 /* Weapon.swift in Sources */,
 				50C195E624F93F17001B7491 /* main.swift in Sources */,
 				50C195ED24F94256001B7491 /* MainMenu.swift in Sources */,
 				50C1960124F95194001B7491 /* RoundsLog.swift in Sources */,
-				50C1960524FAB003001B7491 /* ClassHelp.swift in Sources */,
+				50C1960524FAB003001B7491 /* Help.swift in Sources */,
 				50C195FD24F9514B001B7491 /* GamePlay.swift in Sources */,
-				50C195F724F94E80001B7491 /* ClassGame.swift in Sources */,
-				50C195F524F94CBB001B7491 /* ClassAvatar.swift in Sources */,
+				50C195F724F94E80001B7491 /* Game.swift in Sources */,
+				50C195F524F94CBB001B7491 /* Avatar.swift in Sources */,
 				50C1960924FAEC95001B7491 /* Introduction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -135,7 +135,7 @@ for  indexT in 0...1 {								// 2 teams
 	teams.append(Team(items[indexS]))
 	indexS		+= 1
 	for _ in 0...2 {									// Add avatars to the team)
-		teams[indexT].avatars.append(Avatar(items[indexS], weapons.weapon[indexW].name, game.gPoints))
+		teams[indexT].avatars.append(Avatar(items[indexS], weapons.weapon[indexW], game.gPoints))
 		indexS	+= 1
 		indexW	= (indexW == weapons.weapon.count ? 0 : indexW + 1) // If end of weapons list reached -> indexW reset
 	}

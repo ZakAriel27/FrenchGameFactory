@@ -69,7 +69,7 @@ func newGameInit()
 	teamTurn						= [0,0]		// Avatar to play for each team (dead avatars taken into account)
 	teamHealth					= [9,9]		// Avatars' health number
 	rounds						= [Round]()	// Clear rounds log
-
+	
 }
 
 //┌────────────────────────────────────────────────────┐
@@ -83,6 +83,7 @@ func gamePlay()
 	var status			=	true		// Flag for first while loop
 	var visible			=	false		// Flag need to refresh the display
 	var inputCount		=	0			// Number of runs required in the while loop to collect all data
+	var context			=	0			// Defines the context to ask only the necessary question(s)
 	while status {
 		if teams[0].lifePoints == 0 || teams[1].lifePoints == 0 {
 			break
@@ -91,22 +92,28 @@ func gamePlay()
 			displayGamePlay()
 			visible 		= true
 		}
-		let teamName		= teams[currentT1].name										// To be more readable
-		inputCount 			= game.turnMode == true ? 1 : 0
+		let teamName		= teams[currentT1].name			// To be more readable
+		let playContext	= inputContext()					// Init the context
+		inputCount 			= playContext[0]
+		context				= playContext[1]
+		
 		while inputCount != 3 {
 			if inputCount == 0 {
 				print("\nTeam \(teamName) to play: choose your avatar (\(keyDisplay[teamHealth[currentT1]])): ", terminator:"")
-			} else if inputCount	== 1 {
-				let avatarName	= teams[currentT1].avatars[currentA1].nickName	// To be more readable
-				print("\nIt's up to the avatar \(avatarName) from \(teamName) to play:")
-				if [1,3,5].contains(teamHealth[currentT1]) {		// The current team has only one avatar left
-					inputCount = 2		// Skips the choice of action as care is not possible
-				print("\nChoose the opponent to attack (\(keyDisplay[teamHealth[(currentT1+1) % 2]])): ", terminator:"")
-				} else {
-					print("\nChoose your action key (􀂔/􀂘) and opponent (\(keyDisplay[teamHealth[(currentT1+1) % 2]])) or fellow (\(keyDisplay[teamHealth[currentT1]-(1+(2*currentA1))])): ", terminator:"")
+			} else if inputCount	== 1 {						// Need to choose action and opponent/fellow
+				print("\nIt's up to the avatar \(teams[currentT1].avatars[currentA1].nickName) from \(teamName) to play:")
+				print("\nChoose your action key (􀂔/􀂘) and opponent (\(keyDisplay[teamHealth[(currentT1+1) % 2]])) or fellow (\(keyDisplay[teamHealth[currentT1]-(1+(2*currentA1))])): ", terminator:"")
 						// Need to subtract the playing avatar from the avatars available for care
-				}
+			} else if inputCount == 2 && context == 1 {	// Just need to choose the opponent
+				print("\nIt's up to the avatar \(teams[currentT1].avatars[currentA1].nickName) from \(teamName) to play:")
+				print("\nChoose the opponent to attack (\(keyDisplay[teamHealth[(currentT1+1) % 2]])): ", terminator:"")
+			}else if inputCount == 4 {														// No input needed
+				print("\nAvatar \(teams[currentT1].avatars[currentA1].nickName) from \(teamName) can just attack the last opponent. Press any key to continue: ", terminator:"")
+				gamePlay2()
+				visible		= false
+				break
 			}
+			
 			let choiceNum = getKeyPress()
 			if [1,2,3,97,99,104,108,113].contains(choiceNum) {
 				switch choiceNum {
@@ -143,8 +150,11 @@ func gamePlay()
 					default:
 						break
 				}
-			} else {
-				inputCount	= game.turnMode == true ? 1 : 0	// Wrong input -> init loop of questions before asking again
+			} else {					// Wrong input -> init loop of questions before asking again
+				let playContext	= inputContext()
+				inputCount 			= playContext[0]
+				context				= playContext[1]
+				
 			}
 		}
 	}
@@ -158,17 +168,36 @@ func gamePlay()
 //│                  Game Play Functions               │
 //└────────────────────────────────────────────────────┘
 
+func inputContext() -> [Int] {
+	var playContext		= [game.turnMode == true ? 1 : 0,0]
+	
+	if [1,3,5].contains(teamHealth[currentT1]) {		// The current team has only one avatar left
+		playContext[0]	=	2									// Choice of avatar and action are deducted
+		playContext[1]	+=	1
+		currentA1 			=	teamHealth[currentT1] == 1 ? 0 : (teamHealth[currentT1] == 3 ? 1 : 2)
+		currentAction		=	.attack
+	}
+	if [1,3,5].contains(teamHealth[(currentT1+1) % 2]) {	// The opponent team has only one avatar left
+		playContext[1]		+=	3
+	}
+	if playContext[1] 	== 4 {							// Opponent is deducted too
+		playContext[0]		=	4
+		currentA2 =	teamHealth[(currentT1+1)%2] == 1 ? 0 : (teamHealth[(currentT1+1)%2] == 3 ? 1 : 2)
+	}
+	return playContext
+}
+
+
 func gamePlay2()
 	// Choice processing
 {
-	let team1 					= teams[currentT1]					// To be more readable
+	let team1 					= teams[currentT1]				// To be more readable
 	let team2 					= currentAction == .care ? teams[(currentT1)] : teams[(currentT1+1) % 2]	// Idem
-	// if action = care Team2 = Team1 else Team2 = (currentTeam+1) % 2
-	let avatar1					= team1.avatars[currentA1]	// Idem
-	let avatar2					= team2.avatars[currentA2]	// Idem
-	var extraAnswer			= -1										// -1: no offer, 0: No, 1: Yes
-	var extraPoints			= 0										// Number of points to add or remove
-	var engagedPoints			= 0										// Points engaged for the round
+	let avatar1					= team1.avatars[currentA1]		// Idem
+	let avatar2					= team2.avatars[currentA2]		// Idem
+	var extraAnswer			= -1									// -1: no offer, 0: No, 1: Yes
+	var extraPoints			= 0									// Number of points to add or remove
+	var engagedPoints			= 0									// Points engaged for the round
 	if currentAction == .attack {
 		let randomValue 		= Int.random(in:1...100)
 		if randomValue <= game.extraChance {

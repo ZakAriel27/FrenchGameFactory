@@ -1,5 +1,5 @@
 //
-//  ClassGame.swift
+//  Game.swift
 //  FrenchGameFactory
 //
 //  Created by Pascal Diamand on 28/08/2020.
