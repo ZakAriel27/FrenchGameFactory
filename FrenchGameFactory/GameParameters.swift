@@ -48,7 +48,6 @@ func displayGameParameters()
 	print("􀂒─────────────────────────────────􀂒 􀂒─────────────────────────────────􀂒")
 }
 
-
 //┌────────────────────────────────────────────────────┐
 //│                   Game Parameters                  │
 //└────────────────────────────────────────────────────┘
@@ -56,6 +55,7 @@ func displayGameParameters()
 // Main loop
 func gameParameters()
 {
+	weapons.weaponsInitList()	// Init index of the weapons list
 	var status		= true		// Flag to exit the loop
 	var visible		= false		// Flag to refresh the screen
 	while status {
@@ -188,13 +188,13 @@ func weaponChoice(_ indexT: Int, _ indexA: Int)
 			case 0:			// Exit without changing weapon
 				status			= false
 			case 1...8:		// Weapon in Armory
-				if choiceNum 	<= weaponsCountDisplayed {
-					let index	= weaponsIndex + choiceNum - 1
+				if choiceNum 	<= weapons.displayed {
+					let index	= weapons.currentIndex + choiceNum - 1
 					teams[indexT].avatars[indexA].avatarWeaponUpdate(weapons.weapon[index])
 					status		= false
 				}
 			case 110:		// Next weapons from the armory
-				weaponsIndex	= weaponsNextIndex
+				weapons.currentIndex	= weapons.nextIndex
 				displayGameParameters()
 			default:
 				break

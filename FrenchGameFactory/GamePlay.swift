@@ -16,13 +16,13 @@ func displayGamePlay()
 	let space		= String(repeating: " ", count: 16)
 
 	// Properties converted to fixed-length strings
-	let t1Play		= (currentT1 == 0 ? "▉▉▉▶ TEAM PLAYING ◀▉▉▉" : "                      ")
-	let t2Play		= (currentT1 == 1 ? "▉▉▉▶ TEAM PLAYING ◀▉▉▉" : "                      ")
+	let t1Play		= (Team.current == 0 ? "▉▉▉▶ TEAM PLAYING ◀▉▉▉" : "                      ")
+	let t2Play		= (Team.current == 1 ? "▉▉▉▶ TEAM PLAYING ◀▉▉▉" : "                      ")
 	let t1Name		= String(String(teams[0].name + space).prefix(12))
 	let t2Name		= String(String(teams[1].name + space).prefix(12))
 	let t1Life		= String(String(String(teams[0].lifePoints) + space).prefix(3))
 	let t2Life		= String(String(String(teams[1].lifePoints) + space).prefix(3))
-	let round		= String(String(String(currentRound) + "  ").prefix(3))
+	let round		= String(String(String(Round.current) + "  ").prefix(3))
 
 	// Array of fixed lenght avatars's names + information for the current team
 	let t1A 			= teams[0].teamAvatarsNWDCList()
@@ -52,23 +52,18 @@ func displayGamePlay()
 
 func newGameInit()
 {
-	// Armoury Initialization
-	weaponsIndex				= 0			// Index in the weapons corresponding to the first displayed
-	weaponsNextIndex			= 0			// Next Index in the weapons array for next display
-	weaponsfirstDisplayed	= 0			// Index in the weapons struct corresponding to the first displayed
-	weaponsCountDisplayed	= 0			// Count of weapons currently displayed (to check choice)
-	
 	// Teams Initialization
-	teams[0].teamGameInit(game)			// Team points and avatars points initialization
-	teams[1].teamGameInit(game)			// Idem
-	currentA1				= 0			// Current avatar playing
+	teams[0].teamPointsInit(game)			// Team points and avatars points initialization
+	teams[1].teamPointsInit(game)			// Idem
 	
 	// Game Initialization
-	currentRound				= 1			// Current round
-	currentT1					= 0			// Current team playing
+	rounds						= [Round]()	// Clear rounds log
+	Round.current				= 1			// Current round
+	Avatar.playing				= 0			// Current avatar playing
+	Team.current				= 0			// Current team playing
 	teamTurn						= [0,0]		// Avatar to play for each team (dead avatars taken into account)
 	teamHealth					= [9,9]		// Avatars' health number
-	rounds						= [Round]()	// Clear rounds log
+
 	
 }
 
@@ -92,23 +87,23 @@ func gamePlay()
 			displayGamePlay()
 			visible 		= true
 		}
-		let teamName		= teams[currentT1].name			// To be more readable
+		let teamName		= teams[Team.current].name		// To be more readable
 		let playContext	= inputContext()					// Init the context
 		inputCount 			= playContext[0]
 		context				= playContext[1]
 		
 		while inputCount != 3 {
 			if inputCount == 0 {
-				print("\nTeam \(teamName) to play: choose your avatar (\(keyDisplay[teamHealth[currentT1]])): ", terminator:"")
+				print("\nTeam \(teamName) to play: choose your avatar (\(keyDisplay[teamHealth[Team.current]])): ", terminator:"")
 			} else if inputCount	== 1 {						// Need to choose action and opponent/fellow
-				print("\nIt's up to the avatar \(teams[currentT1].avatars[currentA1].nickName) from \(teamName) to play:")
-				print("\nChoose your action key (􀂔/􀂘) and opponent (\(keyDisplay[teamHealth[(currentT1+1) % 2]])) or fellow (\(keyDisplay[teamHealth[currentT1]-(1+(2*currentA1))])): ", terminator:"")
+				print("\nIt's up to the avatar \(teams[Team.current].avatars[Avatar.playing].nickName) from \(teamName) to play:")
+				print("\nChoose your action key (􀂔/􀂘) and opponent (\(keyDisplay[teamHealth[(Team.current+1) % 2]])) or fellow (\(keyDisplay[teamHealth[Team.current]-(1+(2*Avatar.playing))])): ", terminator:"")
 						// Need to subtract the playing avatar from the avatars available for care
 			} else if inputCount == 2 && context == 1 {	// Just need to choose the opponent
-				print("\nIt's up to the avatar \(teams[currentT1].avatars[currentA1].nickName) from \(teamName) to play:")
-				print("\nChoose the opponent to attack (\(keyDisplay[teamHealth[(currentT1+1) % 2]])): ", terminator:"")
+				print("\nIt's up to the avatar \(teams[Team.current].avatars[Avatar.playing].nickName) from \(teamName) to play:")
+				print("\nChoose the opponent to attack (\(keyDisplay[teamHealth[(Team.current+1) % 2]])): ", terminator:"")
 			}else if inputCount == 4 {														// No input needed
-				print("\nAvatar \(teams[currentT1].avatars[currentA1].nickName) from \(teamName) can just attack the last opponent. Press any key to continue: ", terminator:"")
+				print("\nAvatar \(teams[Team.current].avatars[Avatar.playing].nickName) from \(teamName) can just attack the last opponent. Press any key to continue: ", terminator:"")
 				gamePlay2()
 				visible		= false
 				break
@@ -118,23 +113,23 @@ func gamePlay()
 			if [1,2,3,97,99,104,108,113].contains(choiceNum) {
 				switch choiceNum {
 					case 1,2,3:		// Avatar choice
-						if inputCount == 0  && keyGroup.contains(String(choiceNum-1)+String(teamHealth[currentT1])) {
-							currentA1 	= choiceNum - 1
+						if inputCount == 0  && keyGroup.contains(String(choiceNum-1)+String(teamHealth[Team.current])) {
+							Avatar.playing 	= choiceNum - 1
 							inputCount			+= 1
-						} else if inputCount == 2 && keyGroup.contains(String(choiceNum-1)+String(teamHealth[currentAction == .attack ? (currentT1+1)%2 : currentT1])) {
-							currentA2 	= choiceNum - 1
+						} else if inputCount == 2 && keyGroup.contains(String(choiceNum-1)+String(teamHealth[Game.action == .attack ? (Team.current+1)%2 : Team.current])) {
+							Avatar.receiving 	= choiceNum - 1
 							inputCount	+= 1
 							gamePlay2()
 							visible		= false
 						}
 					case 97:			// Action Attack
 						if inputCount == 1 {
-							currentAction	= Actions.attack
+							Game.action	= Actions.attack
 							inputCount		+= 1
 						}
 					case 99:			// Action Care
 						if inputCount == 1 {
-							currentAction	= Actions.care
+							Game.action	= Actions.care
 							inputCount 		+= 1
 						}
 					case 104:		// Help
@@ -171,18 +166,18 @@ func gamePlay()
 func inputContext() -> [Int] {
 	var playContext		= [game.turnMode == true ? 1 : 0,0]
 	
-	if [1,3,5].contains(teamHealth[currentT1]) {		// The current team has only one avatar left
+	if [1,3,5].contains(teamHealth[Team.current]) {		// The current team has only one avatar left
 		playContext[0]	=	2									// Choice of avatar and action are deducted
 		playContext[1]	+=	1
-		currentA1 			=	teamHealth[currentT1] == 1 ? 0 : (teamHealth[currentT1] == 3 ? 1 : 2)
-		currentAction		=	.attack
+		Avatar.playing 			=	teamHealth[Team.current] == 1 ? 0 : (teamHealth[Team.current] == 3 ? 1 : 2)
+		Game.action		=	.attack
 	}
-	if [1,3,5].contains(teamHealth[(currentT1+1) % 2]) {	// The opponent team has only one avatar left
+	if [1,3,5].contains(teamHealth[(Team.current+1) % 2]) {	// The opponent team has only one avatar left
 		playContext[1]		+=	3
 	}
 	if playContext[1] 	== 4 {							// Opponent is deducted too
 		playContext[0]		=	4
-		currentA2 =	teamHealth[(currentT1+1)%2] == 1 ? 0 : (teamHealth[(currentT1+1)%2] == 3 ? 1 : 2)
+		Avatar.receiving =	teamHealth[(Team.current+1)%2] == 1 ? 0 : (teamHealth[(Team.current+1)%2] == 3 ? 1 : 2)
 	}
 	return playContext
 }
@@ -191,14 +186,14 @@ func inputContext() -> [Int] {
 func gamePlay2()
 	// Choice processing
 {
-	let team1 					= teams[currentT1]				// To be more readable
-	let team2 					= currentAction == .care ? teams[(currentT1)] : teams[(currentT1+1) % 2]	// Idem
-	let avatar1					= team1.avatars[currentA1]		// Idem
-	let avatar2					= team2.avatars[currentA2]		// Idem
+	let team1 					= teams[Team.current]				// To be more readable
+	let team2 					= Game.action == .care ? teams[(Team.current)] : teams[(Team.current+1) % 2]	// Idem
+	let avatar1					= team1.avatars[Avatar.playing]		// Idem
+	let avatar2					= team2.avatars[Avatar.receiving]		// Idem
 	var extraAnswer			= -1									// -1: no offer, 0: No, 1: Yes
 	var extraPoints			= 0									// Number of points to add or remove
 	var engagedPoints			= 0									// Points engaged for the round
-	if currentAction == .attack {
+	if Game.action == .attack {
 		let randomValue 		= Int.random(in:1...100)
 		if randomValue <= game.extraChance {
 			extraPoints			= game.extraPoints * (Int.random(in: 0...1) == 1 ? 1 : -1)
@@ -223,7 +218,7 @@ func gamePlay2()
 		avatar2.avatarLifeUpdate(-engagedPoints)
 		team2.teamLifeUpdate(-engagedPoints)
 		if avatar2.aPoints[0] == 0 {
-			teamHealth[(currentT1+1) % 2] -= 2 * currentA2 + 1	// Deducts the prime number linked to the avatar
+			teamHealth[(Team.current+1) % 2] -= 2 * Avatar.receiving + 1	// Deducts the prime number linked to the avatar
 			print("\n\n\(String(repeating: "† ", count: 40))")
 			print("\n\(avatar2.nickName) has no more life points: † R.I.P. †. Press any key to continue: ", terminator:"")
 			let _						= getKeyPress()
@@ -237,7 +232,7 @@ func gamePlay2()
 			avatar2.avatarLifeUpdate(engagedPoints)								// Avatar2 belongs to team1 too -> see above
 			avatar1.avatarLifeUpdate(-engagedPoints)								//	Avatar's points decreases -> team's points equal
 			if avatar1.aPoints[0] == 0 {
-				teamHealth[currentT1]	-= 2 * currentA1 + 1						// Deducts the prime number linked to the avatar
+				teamHealth[Team.current]	-= 2 * Avatar.playing + 1						// Deducts the prime number linked to the avatar
 				print("\n\n\(String(repeating: "† ", count: 40))")
 				print("\n\(avatar1.nickName) has no more life points: † R.I.P.†. Press any key to continue: ", terminator:"")
 				let _					= getKeyPress()
@@ -248,41 +243,37 @@ func gamePlay2()
 		}
 	}
 	// Recording of round data
-	let avatarT1	= (currentT1 == 0 ? currentA1 : currentA2)
-	let avatarT2	= (currentT1 == 1 ? currentA1 : currentA2)
+	let avatarT1	= (Team.current == 0 ? Avatar.playing : Avatar.receiving)
+	let avatarT2	= (Team.current == 1 ? Avatar.playing : Avatar.receiving)
 	let t1Life		=	teams[0].lifePoints
 	let t2Life		=	teams[1].lifePoints
 	let t1ALife:	[Int]	= teams[0].teamAvatarsLife()
 	let t2ALife:	[Int]	= teams[1].teamAvatarsLife()
 	
-	rounds.append(Round(currentRound, currentT1, avatarT1, avatarT2, currentAction, engagedPoints, extraPoints, extraAnswer, t1Life, t2Life, t1ALife, t2ALife))
+	rounds.append(Round(Round.current, Team.current, avatarT1, avatarT2, Game.action, engagedPoints, extraPoints, extraAnswer, t1Life, t2Life, t1ALife, t2ALife))
 	
 	if teams[0].lifePoints != 0 && teams[1].lifePoints != 0 {
 		// Initialization for the next round
-		currentRound		+=	1							// Init for the next round
-		currentT1			= (currentT1+1) % 2		// Swap current team
-		if game.turnMode {
-			if (currentT1 == 0) {						// Rotation mode & again team1 -> need to change Avatars to play
-				//print("curent: \(currentT1) teamTurn: \(teamTurn)  teamHealth: \(teamHealth)")
+		Round.current			+=	1							// Init for the next round
+		Team.current			= (Team.current+1) % 2	// Swap current team
+		if game.turnMode {									// Rotation mode
+			if (Team.current == 0) {						// Again team1 -> need to change Avatars to play
 				teamTurn[0] 			= (teamTurn[0] + 1) % 3		// Updates teamTurn for team1
 				while !keyGroup.contains(String(teamTurn[0])+String(teamHealth[0])) {
 					teamTurn[0] 		= (teamTurn[0] + 1) % 3
 				}
-				currentA1 = teamTurn[0]									// Update currentA1 with new teamTurn[0]
+				Avatar.playing = teamTurn[0]									// Update currentA1 with new teamTurn[0]
 				teamTurn[1] 			= (teamTurn[1] + 1) % 3		// Updates teamTurn for team2
 				while !keyGroup.contains(String(teamTurn[1])+String(teamHealth[1])) {
 					teamTurn[1] 		= (teamTurn[1] + 1) % 3
 				}
 			} else {
-				//print("curent: \(currentT1) teamTurn: \(teamTurn)  teamHealth: \(teamHealth)")
 				//The avatar to be played may have died during the previous turn.
-				while !keyGroup.contains(String(teamTurn[currentT1])+String(teamHealth[currentT1])) {
-					teamTurn[currentT1]	=	(teamTurn[currentT1] + 1) % 3
+				while !keyGroup.contains(String(teamTurn[Team.current])+String(teamHealth[Team.current])) {
+					teamTurn[Team.current]	=	(teamTurn[Team.current] + 1) % 3
 				}
-				currentA1 = teamTurn[1]
+				Avatar.playing = teamTurn[1]
 			}
-		//print("curent: \(currentT1) teamTurn: \(teamTurn)  teamHealth: \(teamHealth)")
-		//let _ = getKeyPress()
 		}
 	}
 }
@@ -296,7 +287,7 @@ func gameEnd()
 	if teams[0].lifePoints != 0 && teams[1].lifePoints != 0 {	// None of the team lost -> game canceled
 		print("\n\(String(space + "Game cancelled!").suffix(90))")
 	} else {
-		print("\n\(String(space + "Team " + teams[currentT1].name + " wins. Congratulations!").suffix(90))")
+		print("\n\(String(space + "Team " + teams[Team.current].name + " wins. Congratulations!").suffix(90))")
 	}
 	print("\n\(String(repeating: "• ", count: 46))\n")
 	while status {

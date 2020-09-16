@@ -19,6 +19,7 @@ func introduction()
 				print()
 			}
 			let _ = getKeyPress()
+			screenRefresh()
 		}
 	}
 	print()

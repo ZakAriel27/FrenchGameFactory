@@ -10,6 +10,8 @@ class Avatar {
 	/*
 	-  Avatar playing are updated at each new game according to the scenario choosen
 	*/
+	static var playing	= 0		// Avatar playing
+	static var receiving	= 0		// Avatar receiving
 	
 	var nickName:			String	// Must be unique for the game
 	var weapon:				String	// Weapon used by the caracter to attack

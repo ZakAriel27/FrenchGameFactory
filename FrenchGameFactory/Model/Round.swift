@@ -6,16 +6,12 @@
 //  Copyright © 2020 Pascal Diamand. All rights reserved.
 //
 
-enum Actions {
-	/* Contains the list of possible actions for an avatars.*/
-	case attack, care
-}
-
 class Round {
 	/*
 	-  Each game consists of several rounds, which are stored in order to consult the progress during the game.
 	-  Index of each team and avatar is memorized as well as the different information related to the round.
 	*/
+	static var current	= 0	// Current round
 	
 	let order:		Int			// Round order
 	let token:		Int			//	Token for the round = team playing

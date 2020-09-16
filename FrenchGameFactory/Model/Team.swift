@@ -8,10 +8,12 @@
 
 class Team {
 	// The game plays with 2 teans wich are instanciated at program lauch with default values
+	static var current	= 0				// Index of current team playing
+	static var turn		= [0,0]			//
 	
-	var name: 		String			// Must be unique for the game
-	var avatars 	= [Avatar]()	// Array of team avatars
-	var lifePoints = 0				// Remaining life points counter for the team -> sum of avatars's life points remaining
+	var name: 				String			// Must be unique for the game
+	var avatars 			= [Avatar]()	// Array of team avatars
+	var lifePoints 		= 0				// Remaining life points counter for the team -> sum of avatars's life points remaining
 	
 	init(_ name: String) {
 		self.name 	= name
@@ -25,7 +27,17 @@ class Team {
 		self.lifePoints	+=	points
 	}
 	
-	func teamGameInit(_ game: Game)
+	func teamInit(_ aNames: [String],_ indexArmory: Int)
+	{
+		// Pre-loading of team to be able to start playing right away
+		var indexW		= indexArmory				// weapons index to distribute weapons between the two teams
+		for aName in aNames {						// Add avatars to the team
+			self.avatars.append(Avatar(aName, weapons.weapon[indexW], game.gPoints))
+			indexW	= (indexW == weapons.weapon.count ? 0 : indexW + 1) // If end of weapons list reached -> indexW reset
+		}
+	}
+	
+	func teamPointsInit(_ game: Game)
 	{
 		// Initialization of teams avatar's life points for a new game.
 		self.lifePoints = 3 * game.gPoints[0]
