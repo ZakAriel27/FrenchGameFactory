@@ -5,32 +5,33 @@
 //  Created by Pascal Diamand on 28/08/2020.
 //  Copyright © 2020 Pascal Diamand. All rights reserved.
 //
-enum Actions {
-	/* Contains the list of possible actions for an avatars.*/
-	case attack, care
-}
 
-class Game {
-	// This class contains the game settings
-	static var action	= Actions.attack	// Current action during the game
-	
-	var gPoints			= [60,20,10]		//	Default points values for life, damage and care points for a single avatar
-	var allocations	= [[Int]]()			// [A][P] Points [P] allocations of Life, damage and care for team's avatars [A]
+// This class contains the game settings with static var for global information during the game
+class Game
+{
+	static var mode			= 0			// game, avatars life, avatars properties
+	static var playable		= 0			// Playbable status (<2: yes, 2: no team can play, 3: Team1 wins, 4: Team2 wins, 5: canceled
+	static var extraOffer 	= 0			// Points offered for the current turn
+	static var choiceOffer	= 0			// Answer for the offer
+	static var helpMode		= false		// Flag to show/hide help functions
+
+	var pointsShared	= [[Int]]()			// [A][P] Points [P] allocations of Life, damage and care for team's avatars [A]
 	var turnMode		= true				// Turn mode between avatars in a team rotation (true) or free (false).
-	var careMode		= true				// X care points given = X life points lost (true) or not life points lost
+	var careCost		= 0					// Number of Life points to be deducted from the donor for each care (0 = no cost)
 	var extraChance 	= 40					// Percentage change of getting an extra offer
-	var extraPoints	= 15					// Number of points that can be added or deducted from the avatar's damage points
-	
+	var extraMin		= 10					// Minimum points offered
+	var extraMax		= 25					// Maximum points offered
+
 	init()
 	{
-		for _ in 0...2 {
-			self.allocations.append(self.gPoints)	// Generation of inferred values
-		}
+		self.pointsShared.append([65,20,10])	// Generation of inferred values
+		self.pointsShared.append([45,25,5])	// Idem
+		self.pointsShared.append([85,15,0])	// Idem
 	}
-	
+
+	// This method initializes 2 teams of 3 avatars to start playing right away
 	func gameInit()
 	{
-		// Pre-loading 2 teams of 3 avatars in order to be able to start playing right away
 		let tNames	= ["DWARVES", "ORCS"]
 		let aNames	= ["Dwalin","Gimli","Bombur","Azog","Bolg","Golfimbul"]
 		var tIndex	= 0
@@ -41,61 +42,63 @@ class Game {
 		}
 	}
 	
-	func gamePointsUpdate(_ indexP: Int, _ gPoints: Int, _ gAllocations: [Int])
+	// This method updates the points distribution for a defined type
+	func gamePointsUpdate(_ indexP: Int, _ Allocation: [Int])
 	{
-		// This function update life points for the team and each of the 3 avatars
-		self.gPoints[indexP]	= gPoints
 		for index in 0...2 {
-			self.allocations[index][indexP] = gAllocations[index]
+			self.pointsShared[index][indexP] = Allocation[index]
 		}
 	}
 	
+	// This method updates the extra parameters
 	func gameExtraUpdate (_ extra: [Int])
 	{
-		self.extraChance		= extra[0]
-		self.extraPoints		= extra[1]
+		self.extraChance	= extra[0]
+		self.extraMin		= extra[1] < extra[2] ? extra[1] : extra[2]		// Invert input if necessary
+		self.extraMax		= extra[1] >= extra[2] ? extra[1] : extra[2]		// Idem
 	}
 	
-	func careModeUpdate()
+	func careCostUpdate(_ cost: Int)
 	{
-		self.careMode			= !self.careMode
+		self.careCost			= cost
 	}
 	
 	func turnModeUpdate()
 	{
 		self.turnMode			= !self.turnMode
 	}
-	
+		
+	// This method provides an array of life points distribution for a team
 	func gameLifePoints() -> [Int]
 	{
-		// This function returns a table of life points for each avatar position and the team.
-		var LifePoints			= [Int]()
-		LifePoints.append(self.gPoints[0] * 3)					// For the team (0)
+		var lifePoints			= [Int]()
+		var teamPoints			= 0
 		for index in 0...2 {
-			LifePoints.append(self.allocations[index][0])	// The 3 avatars (1, 2, 3)
+			lifePoints.append(self.pointsShared[index][0])	// The 3 avatars
+			teamPoints	+= self.pointsShared[index][0]
 		}
-		return LifePoints
+		lifePoints.insert(teamPoints, at: 0)					// The team
+		return lifePoints
 	}
 	
+	//This method provides an array of formatted strings for display : game's parameters
 	func gameSettingList() -> [String]
 	{
-		// This function returns an array of formatted strings for the display of the game parameters.
-		let space		= String(repeating: " ", count: 13)	// lenght for formated strings
+		let space		= String(repeating: " ", count: 13)
 		var teamParam	= [String]()
-		let part1		= String(space + String(self.gPoints[0])).suffix(3) + "  "
-		let part2 		= String(space + String(self.gPoints[1])).suffix(3) + "  "
-		let part3 		= String(space + String(self.gPoints[2])).suffix(2)
-		teamParam.append(String(part1 + part2 + part3))
+		var teamPoints	= 0
 		for index in 0...2 {
-			let part1 	= String(space + String(self.allocations[index][0])).suffix(3) + "  "
-			let part2 	= String(space + String(self.allocations[index][1])).suffix(3) + "  "
-			let part3 	= String(space + String(self.allocations[index][2])).suffix(2)
+			teamPoints	+= self.pointsShared[index][0]
+			let part1 	= String(space + String(self.pointsShared[index][0])).suffix(3) + "  "
+			let part2 	= String(space + String(self.pointsShared[index][1])).suffix(3) + "   "
+			let part3 	= String(space + String(self.pointsShared[index][2])).suffix(2)
 			teamParam.append(String(part1 + part2 + part3))
 		}
 		teamParam.append(String(String(space + String(self.extraChance) + "%").suffix(3)))
-		teamParam.append(String(String(String(self.extraPoints) + "p" + space).prefix(3)))
-		teamParam.append((self.careMode == true ? "+C/-Life":"+Care   "))
-		teamParam.append((self.turnMode == true ? "Rotation":"Free    "))
+		teamParam.append(String(String(String(self.extraMin) + space).prefix(2)))
+		teamParam.append(String(String(space + String(self.extraMax)).suffix(2)))
+		teamParam.append((self.careCost > 0 ? "Care=-\(String(String(space + String(self.careCost)).suffix(2))) Life":"  Care free  "))
+		teamParam.append((self.turnMode == true ? "Rotation     ":"Free         "))
 		return teamParam
 	}
 }

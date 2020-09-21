@@ -12,11 +12,12 @@
 
 func displayRoundsLog()
 {
-	// As display is in monospaced font, all values must be formated in fixed lenght
+	// As displayed in monospaced font, all values must be formated in fixed lenght
 	// Display
-	print("􀂒────────────────────────────────────────────────────────────────────────────────────────􀂒")
-	print("│ Rnd │A/C│Av.│     │Av.│ Pts │ Extra │ │ T.1   A.1   A.2   A.3 │ │ T.2   A.1   A.2   A.3 │")
-	print("􀂒────────────────────────────────────────────────────────────────────────────────────────􀂒")
+	print(" 􀂒────────────────────────────────────────────────────────────────────────────────────────􀂒")
+	print(" │ Rnd │A/C│Av.│     │Av.│ Pts │ Extra │ │ T.1   A.1   A.2   A.3 │ │ T.2   A.1   A.2   A.3 │")
+	print(" 􀂒────────────────────────────────────────────────────────────────────────────────────────􀂒")
+	print(rounds[0].roundLine(0))
 	for round in rounds {
 		print(round.roundLine(1))	// Values for each round
 	}
@@ -33,14 +34,8 @@ func roundsLog()
 {
 	displayGamePlay()				// Displays the table of current values
 	displayRoundsLog()			// Display the log
-	var status 			= true	// Flag to exit the loop
-	while status {
-		print("        If nessessary, scrool in you console.    Press 􀂴 to quit the log display : ", terminator:"")
-		let choiceNum 	= getKeyPress()
-		if choiceNum	== 113 {
-			status		= false
-		}
-	}
+	print("        If nessessary, scrool in you console.    Press any key to return to the game: ", terminator:"")
+	let _ 	= getKeyPress()
 }
 
 

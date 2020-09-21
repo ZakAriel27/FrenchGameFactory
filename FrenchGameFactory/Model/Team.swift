@@ -6,15 +6,19 @@
 //  Copyright © 2020 Pascal Diamand. All rights reserved.
 //
 
-class Team {
-	// The game plays with 2 teans wich are instanciated at program lauch with default values
+// The game plays with 2 teans wich are instanciated at program lauch with default values
+class Team
+{
 	static var current	= 0				// Index of current team playing
-	static var turn		= [0,0]			//
+	static var player		= [0,0]			// In rotation mode, allows to know the living avatar to play for each team
+	static var health		= [9,9]			// Allows to quickly find out which avatars are alive for each team.
 	
 	var name: 				String			// Must be unique for the game
 	var avatars 			= [Avatar]()	// Array of team avatars
 	var lifePoints 		= 0				// Remaining life points counter for the team -> sum of avatars's life points remaining
-	
+	var pointsSplit		= [Int]()		// Random order of the sets of points assigned to the avatars
+													// -> Allows not to identify the strength of the opponents by default
+
 	init(_ name: String) {
 		self.name 	= name
 	}
@@ -27,78 +31,119 @@ class Team {
 		self.lifePoints	+=	points
 	}
 	
+	// This method initialises a team with its 3 avatars
 	func teamInit(_ aNames: [String],_ indexArmory: Int)
 	{
-		// Pre-loading of team to be able to start playing right away
-		var indexW		= indexArmory				// weapons index to distribute weapons between the two teams
+		var indexW		= indexArmory
 		for aName in aNames {						// Add avatars to the team
-			self.avatars.append(Avatar(aName, weapons.weapon[indexW], game.gPoints))
-			indexW	= (indexW == weapons.weapon.count ? 0 : indexW + 1) // If end of weapons list reached -> indexW reset
+			self.avatars.append(Avatar(aName, indexW))
+			indexW	= (indexW == weapons.weapon.count ? 0 : indexW + 1) // If end of list is reached -> indexW reset
 		}
 	}
 	
+	// This method initialises team's life points and avatars's points (life, damage, care) for a new game
 	func teamPointsInit(_ game: Game)
 	{
-		// Initialization of teams avatar's life points for a new game.
-		self.lifePoints = 3 * game.gPoints[0]
-		for indexA in 0...2 {																// Used to refer each team's avatar
-			self.avatars[indexA].avatarPointsInit(game.allocations[indexA])	// -> can have differents values per avartar
+		// Defines the random order of the points sets to be awarded
+		var random					= [Int]()
+		var lifePoints				= 0
+		while random.count 		!= 3 {
+			let randomValue 		= Int.random(in:0...2)
+			if random.count 		== 0 {
+				random.append(randomValue)
+			} else if random[0]	!= randomValue {
+				random.append(randomValue)
+				random.append(3-random.reduce(0, +))
+			}
 		}
+		// Allocates sets of points to team avatars -> Team1's Avatar1 may not have the same points set as Team2's Avatar1
+		for index in 0..<random.count {
+			self.avatars[index].avatarPointsInit(game.pointsShared[random[index]])
+			lifePoints 	+= self.avatars[index].points[0]
+		}
+		self.lifePoints	= lifePoints
+		self.pointsSplit	= random
 	}
 	
+	// This method provides an array of formatted strings for display : avatar's nickName + weapon
 	func teamAvatarsNWList() -> [String]
 	{
-		// This function return an array of formated string for the display : avatar's nickName + weapon
-		let space				= String(repeating: " ", count: 12)	// lenght for formated strings
-		var teamAvatarsNW		= [String]()
+		let space			= String(repeating: " ", count: 12)
+		var teamAvatarsNW	= [String]()
 		for avatar in self.avatars {
-				let part1 		= String(String(avatar.nickName + space).prefix(12)) + "      "
-				let part2 		= String(String(avatar.weapon + space).prefix(12))
+			let part1 		= String(String(avatar.nickName + space).prefix(12)) + "      "
+			let part2 		= String(String(weapons.weapon[avatar.weapon] + space).prefix(12))
 				teamAvatarsNW.append(part1+part2)
 		}
 		return teamAvatarsNW
 	}
 	
+	// This method provides an array of formatted strings for display : avatar's nickName + weapon + damage + care
 	func teamAvatarsNWDCList() -> [String]
 	{
-		// This function return an array of formated string for the display : avatar's nickName + weapon + damage + care
-		let space				= String(repeating: " ", count: 12)
+		let space				= String(repeating: " ", count: 30)
 		var teamAvatarsNWDC	= [String]()
 		for avatar in self.avatars {
-			let item = String(String("\(avatar.nickName)-\(avatar.weapon)(-\(avatar.aPoints[1])/+\(avatar.aPoints[2]))" + space).prefix(30))
-			teamAvatarsNWDC.append(item)
+			switch Game.mode {
+				case 0:
+					teamAvatarsNWDC.append(String(String("\(avatar.nickName)/\(weapons.weapon[avatar.weapon])" + space).prefix(30)))
+				case 10:	// Display only for a brief time for the current team
+					if teams[Team.current] === self {
+						teamAvatarsNWDC.append(String(String("\(avatar.nickName)/\(weapons.weapon[avatar.weapon])(-\(avatar.points[1])/+\(avatar.points[2]))" + space).prefix(30)))
+					} else {
+						teamAvatarsNWDC.append(String(String("\(avatar.nickName)/\(weapons.weapon[avatar.weapon])" + space).prefix(30)))
+					}
+				default:
+					teamAvatarsNWDC.append(String(String("\(avatar.nickName)/\(weapons.weapon[avatar.weapon])(-\(avatar.points[1])/+\(avatar.points[2]))" + space).prefix(30)))
+			}
 		}
 		return teamAvatarsNWDC
 	}
 	
+	// This method provides the list of avatar's points (life, damage, care) in an array
 	func teamAvatarsLife() -> [Int]
 	{
-		// This function return an array of avatar's life points
-		var avatarsLife		=	[Int]()
+		var avatarsLife	=	[Int]()
 		for index in 0...2 {
-			avatarsLife.append(self.avatars[index].aPoints[0])
+			avatarsLife.append(self.avatars[index].points[0])
 		}
 		return avatarsLife
 	}
-	
+
+	// This method provides an array of formatted strings for display : avatar's life points
 	func teamAvatarsLifeList() -> [String]
 	{
-		// This function return an array of formated string for the display : avatar's life points
 		let space				= 	String(repeating: " ", count: 3)	// 3 is the lenght for theses formated strings
 		var avatarsLifeList	=	[String]()
 		for index in 0...2 {
-			if self.avatars[index].aPoints[0] > 0 {
-				avatarsLifeList.append(String(String(space + String(self.avatars[index].aPoints[0])).suffix(3)))
+			if self.avatars[index].points[0] > 0 {
+				switch Game.mode {
+					case 0:		// Game
+						//pointSplit ne contient que l'index dans game/pointsShared. il ne suffot pas de mettre pointSlit[0]
+						let ratio	= Float(self.avatars[index].points[0]) / Float(game.pointsShared[self.pointsSplit[index]][0])
+						let text		= String(String(space + String(repeating: "", count: ratio <= 0.3334 ? 1 : (ratio <= 0.6667 ? 2 : 3))).suffix(3))
+						avatarsLifeList.append(text)
+					case 10:		// Display only for a brief time for the current team
+						if teams[Team.current] === self {
+							avatarsLifeList.append(String(String(space + String(self.avatars[index].points[0])).suffix(3)))
+						} else {
+							let ratio = Float(self.avatars[index].points[0]) / Float(game.pointsShared[self.pointsSplit[index]][0])
+							let text = String(String(space + String(repeating: "", count: ratio <= 0.3334 ? 1 : (ratio <= 0.6667 ? 2 : 3))).suffix(3))
+							avatarsLifeList.append(text)
+						}
+					default:		// Simulator
+						avatarsLifeList.append(String(String(space + String(self.avatars[index].points[0])).suffix(3)))
+				}
 			} else {
-				avatarsLifeList.append("†††")
+				avatarsLifeList.append(" † ")
 			}
 		}
 		return avatarsLifeList
 	}
 	
+	// This method checks that the new name of an avatar doesn't already exist in both team and returns the index if found
 	func teamAvatarDouble(_ name: String) -> Int
 	{
-		// This function checks that the new name of an avatar does not already exist in a team and returns the index if found
 		for indexA in 0...self.avatars.count - 1 {
 			if self.avatars[indexA].nickName == name {
 				return indexA

@@ -15,12 +15,12 @@ func displayMainMenu()
 	// Display
 	screenRefresh()
 	print()
-	print("􀂒──────────────────────────────────────────􀂒")
-	print("│ 􀂴uit             Main Menu          􀂢elp │")
-	print("􀂒──────────────────────────────────────────􀂒")
-	print("│               􀃊 􀄫 Introduction           │")
-	print("│               􀃌 􀄫 Game                   │")
-	print("􀂒──────────────────────────────────────────􀂒")
+	print("􀂒────────────────────────────────────────────────────􀂒")
+	print("│ 􀂴uit                  Main Menu               􀂢elp │")
+	print("􀂒────────────────────────────────────────────────────􀂒")
+	print("│                    􀃊 􀄫 Introduction                │")
+	print("│                    􀃌 􀄫 Game                        │")
+	print("􀂒────────────────────────────────────────────────────􀂒")
 }
 
 //┌────────────────────────────────────────────────────┐
@@ -32,10 +32,10 @@ func mainMenu()
 	var status		= true	// Flag to quit the loo
 	var visible		= false	// Flag to refresh the display
 	while status {
-		while functionLink != "" {			// Manages redirection requests following the end of an action (setting or game played)
-			if functionLink == "Play" {
+		while functionLink != .none {			// Manages redirection requests at the end of an action (settings or play)
+			if functionLink == .play {
 					gamePlay()
-				} else if functionLink == "Setting" {
+			} else if functionLink == .settings {
 					gameParameters()
 				}
 		}
@@ -47,16 +47,19 @@ func mainMenu()
 		let choiceNum = getKeyPress()
 		if [1,2,104,113].contains(choiceNum) {
 			switch choiceNum {
-				case 1: // Introduction
+				case 1: 				// Introduction
 					introduction()
 					visible	= false
-				case 2: // Game
+				case 2: 				// Game
 					gameParameters()
 					visible	= false
-				case 104: // Help
+				case 104: 			// Help
 					displayMainMenu()
-					helps.helpDisplay(3)
-				case 113: // Quit
+					Game.helpMode	= !Game.helpMode
+					if Game.helpMode {
+						helps.helpDisplay(3)
+					}
+				case 113: 			// Quit
 					screenRefresh()
 					print("\nSee you soon to the French Game Factory!")
 					print()

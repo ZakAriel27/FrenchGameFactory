@@ -5,22 +5,21 @@
 //  Created by Pascal Diamand on 28/08/2020.
 //  Copyright © 2020 Pascal Diamand. All rights reserved.
 //
-
-class Avatar {
-	/*
-	-  Avatar playing are updated at each new game according to the scenario choosen
-	*/
-	static var playing	= 0		// Avatar playing
-	static var receiving	= 0		// Avatar receiving
+ 
+// Each team contains 3 avatars. Avatars's points are initialize at the begining of each game and updated during the game
+class Avatar
+{
+	static var playing	= 0				// Avatar playing
+	static var receiving	= 0				// Avatar receiving
+	static var action		= Actions.none	// action for the current avatar
 	
-	var nickName:			String	// Must be unique for the game
-	var weapon:				String	// Weapon used by the caracter to attack
-	var aPoints	=			[Int]()	// Array of life(0), damage(1) and care(2) points
+	var nickName:			String			// Must be unique for the game
+	var weapon:				Int				// Index of the weapon used by the caracter to attack
+	var points	=			[Int]()			// Array of life(0), damage(1) and care(2) points
 	
-	init(_ nickName: String, _ weapon: String, _ points: [Int])	{
+	init(_ nickName: String, _ indexW: Int) {
 		self.nickName 		= nickName
-		self.weapon   		= weapon
-		self.aPoints 		= points		//points corresponds to the default points values défined in the game settings
+		self.weapon   		= indexW
 	}
 	
 	func avatarNameUpdate(_ nickName: String)
@@ -28,19 +27,20 @@ class Avatar {
 		self.nickName		=	nickName
 	}
 	
-	func avatarWeaponUpdate(_ weapon: String)
+	func avatarWeaponUpdate(_ indexW: Int)
 	{
-		self.weapon			=	weapon
+		self.weapon			=	indexW
 	}
 	
 	func avatarLifeUpdate(_ points: Int) {		// Life points are updated during the game
-		self.aPoints[0]	+=	points
+		self.points[0]	+=	points
 	}
 	
-	func avatarPointsInit(_ points: [Int]) {	//	Initialization of an avatar's points for a new game.
-		self.aPoints		=	points
-
+	//	This method initialises avatar's points for a new game.
+	func avatarPointsInit(_ points: [Int]) {
+		self.points			=	points
 	}
+
 }
 
 

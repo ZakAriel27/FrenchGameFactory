@@ -6,11 +6,9 @@
 //  Copyright © 2020 Pascal Diamand. All rights reserved.
 //
 
-struct Help {
-	/*
-	- The Help struct contains the various help messages used throughout the application.
-	- As Help struct contains all the help message, the helpList function return partial content dépending on the context
-	*/
+// The Help struct contains the various help messages used throughout the application.
+struct Help
+{
 	var text = ["\nBienvenue dans cette introduction !",
 					 "\nObjectif :",
 					 "   - La demande initiale de Charlotte était de fournir un programme basique permettant de simuler le déroulement d'un jeu de rôle. L'objectif pour elle étant de trouver le bon EQUILIBRE du jeu en modifiant si besoin le code source, même si elle n'est pas une développeuse, comme elle le dit.",
@@ -33,24 +31,23 @@ struct Help {
 					 "       - Nombre de points de l'offre. Ce nombre de points sera ajouté ou déduit selon une valeur aléatoire (1/2)",
 					 "\n    - Enfin, le programme enregistre chaque tour avec l'ensemble de ses paramètres. Cela permet de consulter l'historique de la partie&, y compris pendant la partie.",
 					 "\n    - Comme cette application est un plutôt un POC, la fonction de sauvegarde dans un fichier n'est pas implémentée.\n",
-					 "───────────────────────────── 􀂨eys functions ───────────────────────────",
-					 "    􀂴: Quit Game Parameters         􀂢: Display current Help",
-					 "  􀃊􀃌: Modify the team's 􀂮ame   􀃊..􀑵: Modify the avatar's data",
-					 "􀂪􀂚􀂘: Modify points allocation      􀂜: Extra Chance & Extra Points",
-					 "       for Life Damage & Care        􀂬: Care mode: +care = -life or not",
-					 "    􀂲: PLAY GAME                    􀂺: Turn mode: rotation/choice player",
-					 "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔",
-					 "────────────────────────────────────── 􀂨eys functions ────────────────────────────────────",
-					 "􀂴: Quit Game or Round          􀂢: Display current Help        􀂪: Display the game's Log",
-					 "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔",
-					 "──────────────── 􀂨eys functions ────────────",
-					 "􀂴: Quit RPG Simulator      􀂢: Display Help",
-					 "􀃊: Presentation Simulator  􀃌: Start a game",
-					 "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔"]
+					 " ────────────────────────────────────── 􀂨eys functions ────────────────────────────────────",
+					 "     􀂴: Quit Game Parameters                   􀂢: Display/hide this help",
+					 " 􀃊..􀃘: Team & avatar's data                􀂪􀂚􀂘: Points allocation for Life Damage & Care",
+					 "     􀂜: Extra offer Chance & Points            􀂬: Care mode: with/whithout removal life",
+					 "     􀂺: Turn mode: rotation/free               􀂲: PLAY GAME",
+					 " ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔",
+					 " ────────────────────────────────────── 􀂨eys functions ────────────────────────────────────",
+					 " 􀂴: Quit Game or Round      􀂢: Toggle display/hide this help    􀂪: Display the game's Log",
+					 " ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔",
+					 " ───────────────────── 􀂨eys functions ─────────────────",
+					 " 􀂴: Quit RPG Simulator      􀂢: Display/Hide this Help",
+					 " 􀃊: Presentation            􀃌: Start game",
+					 " ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔"]
 
+// This method provides an array of formated string for the helpDisplay function
 	func helpList(_ index: Int) -> [String]
 	{
-		// This function return an array of formated string for the helpDisplay function
 		let index1		= helpSection.context[index][0]
 		let index2		= index1 + helpSection.context[index][1] - 1
 		var helpList	= [String]()
@@ -60,9 +57,9 @@ struct Help {
 		return helpList
 	}
 	
+	// This method displays the help corresponding to the requested section.
 	func helpDisplay(_ sectionIndex: Int)
 	{
-		// This function displays the help corresponding to the requested section.
 		let helpList 	= helps.helpList(sectionIndex)
 		for index in 0...helpList.count - 1 {
 			print(helpList[index])
@@ -70,11 +67,8 @@ struct Help {
 	}
 }
 
-
-struct HelpSection {
-	/*
-	- The HelpIndex structure allows to store the values of the start and end indexes according to the calling context.
-	- Thus, if the content of the Help structure evolves, it will not be necessary to modify all the calls but just the HelpIndex structure.
-	*/
+// The HelpIndex structure allows to store the values of the start and end indexes according to the calling context
+struct HelpSection
+{
 	var context = [[0, 22], [22, 7], [29, 3], [32, 4]]
 }
