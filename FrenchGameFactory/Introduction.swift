@@ -15,7 +15,7 @@ func introduction()
 		print(helpList[index])
 		if index == 9 || index == 19 {
 			print("\nPress any key to continue: ", terminator: "")
-			for _ in 1...5 {
+			for _ in 1...(index == 9 ? 1 : 6) {
 				print()
 			}
 			let _ = getKeyPress()

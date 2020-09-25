@@ -9,15 +9,15 @@
 // This class contains the game settings with static var for global information during the game
 class Game
 {
-	static var mode			= 0			// game, avatars life, avatars properties
+	static var mode			= 0			// 0 = game, 1 = simulator
 	static var playable		= 0			// Playbable status (<2: yes, 2: no team can play, 3: Team1 wins, 4: Team2 wins, 5: canceled
 	static var extraOffer 	= 0			// Points offered for the current turn
 	static var choiceOffer	= 0			// Answer for the offer
-	static var helpMode		= false		// Flag to show/hide help functions
-
+	static var lastAction	= ""			// Contains the last action to inform players during the game
+	static var message		= ""			//	Message to be displayed after each round
 	var pointsShared	= [[Int]]()			// [A][P] Points [P] allocations of Life, damage and care for team's avatars [A]
 	var turnMode		= true				// Turn mode between avatars in a team rotation (true) or free (false).
-	var careCost		= 0					// Number of Life points to be deducted from the donor for each care (0 = no cost)
+	var careCost		= 5					// Number of Life points to be deducted from the donor for each care (0 = no cost)
 	var extraChance 	= 40					// Percentage change of getting an extra offer
 	var extraMin		= 10					// Minimum points offered
 	var extraMax		= 25					// Maximum points offered
@@ -67,20 +67,7 @@ class Game
 	{
 		self.turnMode			= !self.turnMode
 	}
-		
-	// This method provides an array of life points distribution for a team
-	func gameLifePoints() -> [Int]
-	{
-		var lifePoints			= [Int]()
-		var teamPoints			= 0
-		for index in 0...2 {
-			lifePoints.append(self.pointsShared[index][0])	// The 3 avatars
-			teamPoints	+= self.pointsShared[index][0]
-		}
-		lifePoints.insert(teamPoints, at: 0)					// The team
-		return lifePoints
-	}
-	
+			
 	//This method provides an array of formatted strings for display : game's parameters
 	func gameSettingList() -> [String]
 	{
@@ -97,7 +84,7 @@ class Game
 		teamParam.append(String(String(space + String(self.extraChance) + "%").suffix(3)))
 		teamParam.append(String(String(String(self.extraMin) + space).prefix(2)))
 		teamParam.append(String(String(space + String(self.extraMax)).suffix(2)))
-		teamParam.append((self.careCost > 0 ? "Care=-\(String(String(space + String(self.careCost)).suffix(2))) Life":"  Care free  "))
+		teamParam.append((self.careCost > 0 ? "Care = -\(String(String(String(self.careCost)+" ").prefix(2)))Life":"Care free     "))
 		teamParam.append((self.turnMode == true ? "Rotation     ":"Free         "))
 		return teamParam
 	}

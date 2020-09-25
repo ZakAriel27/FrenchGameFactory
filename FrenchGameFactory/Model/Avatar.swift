@@ -11,8 +11,7 @@ class Avatar
 {
 	static var playing	= 0				// Avatar playing
 	static var receiving	= 0				// Avatar receiving
-	static var action		= Actions.none	// action for the current avatar
-	
+	static var action		= 0				// action for the current avatar
 	var nickName:			String			// Must be unique for the game
 	var weapon:				Int				// Index of the weapon used by the caracter to attack
 	var points	=			[Int]()			// Array of life(0), damage(1) and care(2) points

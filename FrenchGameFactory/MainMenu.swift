@@ -15,12 +15,16 @@ func displayMainMenu()
 	// Display
 	screenRefresh()
 	print()
-	print("􀂒────────────────────────────────────────────────────􀂒")
-	print("│ 􀂴uit                  Main Menu               􀂢elp │")
-	print("􀂒────────────────────────────────────────────────────􀂒")
-	print("│                    􀃊 􀄫 Introduction                │")
-	print("│                    􀃌 􀄫 Game                        │")
-	print("􀂒────────────────────────────────────────────────────􀂒")
+	print(" 􀂒──────────────────────────────────────────────────────􀂒")
+	print(" │ 􀂴uit                  Main Menu                 􀂢elp │")
+	print(" 􀂒──────────────────────────────────────────────────────􀂒")
+	print(" │                    􀃊 􀄫 Introduction                  │")
+	print(" │                    􀃌 􀄫 Settings                      │")
+	print(" │                    􀃎 􀄫 Game                          │")
+	print(" 􀂒──────────────────────────────────────────────────────􀂒")
+	if helpMode {
+		helps.helpDisplay(3)
+	}
 }
 
 //┌────────────────────────────────────────────────────┐
@@ -34,39 +38,36 @@ func mainMenu()
 	while status {
 		while functionLink != .none {			// Manages redirection requests at the end of an action (settings or play)
 			if functionLink == .play {
-					gamePlay()
+				gamePlay()
 			} else if functionLink == .settings {
-					gameParameters()
-				}
+				gameSettings()
+			}
 		}
 		if !visible {
 			displayMainMenu()
 			visible	= true
 		}
-		print("\nPress the key corresponding to your choice (􀃊 􀃌 􀂢 􀂴): ", terminator:"")
+		print("\n Press the key corresponding to your choice (􀃊 􀃌 􀃎 􀂢 􀂴): ", terminator:"")
 		let choiceNum = getKeyPress()
-		if [1,2,104,113].contains(choiceNum) {
+		if [1,2,3,104,113].contains(choiceNum) {
 			switch choiceNum {
 				case 1: 				// Introduction
 					introduction()
-					visible	= false
-				case 2: 				// Game
-					gameParameters()
-					visible	= false
+				case 2: 				// Setting
+					gameSettings()
+				case 3: 				// Game
+					gamePlay()
 				case 104: 			// Help
-					displayMainMenu()
-					Game.helpMode	= !Game.helpMode
-					if Game.helpMode {
-						helps.helpDisplay(3)
-					}
+					helpMode	= !helpMode
 				case 113: 			// Quit
 					screenRefresh()
-					print("\nSee you soon to the French Game Factory!")
+					print("\n See you soon to the French Game Factory!")
 					print()
 					status	= false
 				default:
 					break
 			}
+			visible 			= false
 		} else {
 			print()
 		}

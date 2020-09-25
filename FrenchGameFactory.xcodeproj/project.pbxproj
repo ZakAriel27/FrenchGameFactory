@@ -15,7 +15,7 @@
 		50C195F724F94E80001B7491 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195F624F94E80001B7491 /* Game.swift */; };
 		50C195F924F94F47001B7491 /* Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195F824F94F47001B7491 /* Round.swift */; };
 		50C195FD24F9514B001B7491 /* GamePlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195FC24F9514B001B7491 /* GamePlay.swift */; };
-		50C195FF24F95176001B7491 /* GameParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195FE24F95176001B7491 /* GameParameters.swift */; };
+		50C195FF24F95176001B7491 /* GameSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C195FE24F95176001B7491 /* GameSettings.swift */; };
 		50C1960124F95194001B7491 /* RoundsLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C1960024F95194001B7491 /* RoundsLog.swift */; };
 		50C1960524FAB003001B7491 /* Help.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C1960424FAB003001B7491 /* Help.swift */; };
 		50C1960924FAEC95001B7491 /* Introduction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C1960824FAEC95001B7491 /* Introduction.swift */; };
@@ -43,7 +43,7 @@
 		50C195F624F94E80001B7491 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		50C195F824F94F47001B7491 /* Round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Round.swift; sourceTree = "<group>"; };
 		50C195FC24F9514B001B7491 /* GamePlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePlay.swift; sourceTree = "<group>"; };
-		50C195FE24F95176001B7491 /* GameParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameParameters.swift; sourceTree = "<group>"; };
+		50C195FE24F95176001B7491 /* GameSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSettings.swift; sourceTree = "<group>"; };
 		50C1960024F95194001B7491 /* RoundsLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundsLog.swift; sourceTree = "<group>"; };
 		50C1960424FAB003001B7491 /* Help.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Help.swift; sourceTree = "<group>"; };
 		50C1960824FAEC95001B7491 /* Introduction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Introduction.swift; sourceTree = "<group>"; };
@@ -95,7 +95,7 @@
 				50C195E524F93F17001B7491 /* main.swift */,
 				50C195EC24F94256001B7491 /* MainMenu.swift */,
 				50C1960824FAEC95001B7491 /* Introduction.swift */,
-				50C195FE24F95176001B7491 /* GameParameters.swift */,
+				50C195FE24F95176001B7491 /* GameSettings.swift */,
 				50C195FC24F9514B001B7491 /* GamePlay.swift */,
 				50C1960024F95194001B7491 /* RoundsLog.swift */,
 				50BB4469250AE4E500306324 /* Model */,
@@ -163,7 +163,7 @@
 			files = (
 				50C195F324F94ADF001B7491 /* Team.swift in Sources */,
 				50C195F924F94F47001B7491 /* Round.swift in Sources */,
-				50C195FF24F95176001B7491 /* GameParameters.swift in Sources */,
+				50C195FF24F95176001B7491 /* GameSettings.swift in Sources */,
 				50C195F124F94A27001B7491 /* Weapon.swift in Sources */,
 				50C195E624F93F17001B7491 /* main.swift in Sources */,
 				50C195ED24F94256001B7491 /* MainMenu.swift in Sources */,

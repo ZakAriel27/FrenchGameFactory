@@ -12,15 +12,20 @@ import Foundation
 //│                 Screen Functions                   │
 //└────────────────────────────────────────────────────┘
 
-func screenSizing()
+func consoleSizing()
 {
 	// This function helps to size the console to be in good conditions to use the application
-	print("\nWellcome to the RPS Simulator! (by the French Game Factory)\n\n")
-	print("\nBefore starting I need your help !")
-	print("\n   - As the commands related to the screen refresh don't work under Xcode, I need your help to size the console to be in good conditions to use the application.")
-	print("\n      When ready, press 􀅇 to continue.")
+	print("\n  Wellcome to the RPS Simulator! (by the French Game Factory)\n")
+	print("\n  Before starting I need your help!")
+	print("\n  First of all, you must see all the characters below without any '?' on the line")
+	print("\n  Palette : 􀑋 􀝶 ◀ ▶ │ ─ 􀃈 􀃊 􀃌 􀃎 􀘙 􀃒 􀑵 􀃖 􀃘 􀑷 􀂔 􀂘 􀂚 􀂞 􀂠􀂡 􀂢 􀂨 􀂪 􀂬 􀂮 􀂲 􀂴 􀂶 􀂸􀂹 􀂺 􀃀 􀃂 􀃄")
+	print("\n  If not, it means that you've not updated the SF symbol to V2 (Apple's font). This font is needed to use the program!")
+	print("\n  Press 􀅇 to continue or stop the programm to download the SF Synbols Fonts V2 at https://developer.apple.com/sf-symbols/")
 	let _ = readLine()
-	print("- A rectangle will be displayed. Please size the console so that you can see all 4 sides (no more in height).")
+	print("\n  - As the commands related to the screen refresh don't work under Xcode, I need your help to size the console to be in good conditions to use the application.")
+	print("     When ready, press 􀅇 to continue.")
+	let _ = readLine()
+	print("  - A rectangle will be displayed. Please hide the left part and size the console so that you can see all the 4 sides (no more in height).")
 	print("     Press 􀅇 to continue.")
 	let _ = readLine()
 	print("􀂒────────────────────────────────────────────────────────────────────────────────────────􀂒")
@@ -29,7 +34,11 @@ func screenSizing()
 	}
 	print("􀂒──────────────────────────  When done, press 􀅇 to continue  ───────────────────────────􀂒")
 	let _ = readLine()
-	print("Tank's for you help. Program starts in 3 seconds ...")
+	print("  Thank you for your help.")
+	print("  If you don't want to go through this step next time, just comment line 147 in main.swift.")
+	print("  Press 􀅇 to continue.")
+	let _ = readLine()
+	print("  Program starts in 3 seconds ...")
 	do {
 		sleep(3)
 	}
@@ -37,11 +46,8 @@ func screenSizing()
 
 func screenRefresh() {
 	// This function replaces the clear function, which is inactive from the console.
-		print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+		print(String(repeating: "\n", count: 32))
 }
-
-// Palette : 􀄌 􀄊 􀄋 􀁸 􀏃 􀑋 􀝶 􀀀 􀁴 􀙦 ◀ ▶ │ ─ 􀃈 􀃊 􀃌 􀃎 􀘙 􀃒 􀑵 􀃖 􀃘 􀑷 􀂔􀂕 􀂘 􀂚 􀂞􀂟 􀂠􀂡 􀂢 􀂨 􀂪 􀂬􀂭 􀂮 􀂲 􀂴 􀂶􀂷 􀂸􀂹 􀂺􀂻 􀃀 􀃂 􀃄
-
 
 //┌────────────────────────────────────────────────────┐
 //│                  Input Functions                   │
@@ -65,10 +71,14 @@ func getKeyPress() -> Int
 	if key == 195 {								// Pascal: Accented characters on the row of numeric keys (éèçà)
 		key 					= Int(getchar())	// Pascal: Distinctive part of the accented character
 	}
+	//freopen("/dev/null", "w", stdout)		// Pascal : Tentative de ne pas avoir l'écho de la touche pressée
+	//fclose(stdout)								// Idem
+	//fflush(stdout)								// Idem
 	tcsetattr( STDIN_FILENO, TCSANOW, &oldt)
-	fflush(stdin)							// Pascal : Necessary to avoid parasitic characters at the next readline()
-	return choiceConvert(key)			// Pascal: Add choiceConvert to simplify code
-												// Accented letters return 2 codes. If input buffer is not clear the next getKeyPress will receive the second code before the user has even pressed a new key.
+	fflush(stdin)									// Pascal : Necessary to avoid parasitic characters at the next readline()
+	return choiceConvert(key)					// Pascal : Add choiceConvert to simplify code
+														// Accented letters return 2 codes. If input buffer is not clear the next getKeyPress will receive
+														// the second code before the user has even pressed a new key.
 }
 
 // This function returns a unique value from upper/lower case or numbers/characters on the same key. It simplifies input processing
@@ -81,17 +91,23 @@ func choiceConvert(_ input: Int) -> Int
 	}
 }
 
+// this function is called when I want to call only one function in a ternary expression rather than if {}
+func nilFunc() {}
+
+
 //┌────────────────────────────────────────────────────┐
 //│                    Enumerations                    │
 //└────────────────────────────────────────────────────┘
 
-enum Actions: String {		// List of possible actions for an avatars.
-	case none = "has passed his turn", attack = "attacked", care = "healed"
-}
-
 enum Functions {		// List of possible function to be linked
 	case none, play, settings
 }
+
+var actions	= [[String]]()		// Label used according to action. Can't have index and multiple labels in enum.
+actions.append(["passed his turn", "attacked", "healed", "killed"])
+actions.append(["P", "A", "C", "K"])
+actions.append(["Pass ", " ━▶  ", "◀━▶  ", " ━▶  "])
+actions.append(["Pass ", "  ◀━ ", "  ◀━▶", "  ◀━ "])
 
 
 //┌────────────────────────────────────────────────────┐
@@ -113,6 +129,7 @@ let keyGroup 	= ["01","04","06","09","13","14","18","19","25","26","28","29"]	//
 // Help Initialization
 let helps 					= Help()				// Struct containing all help texts availables
 let helpSection 			= HelpSection()	//Table of message groups to be displayed on demand
+var helpMode				= false				// Flag to show/hide help functions
 
 // Game Initialization
 let game						= Game()				// instance containing the game setting and points counters
@@ -128,6 +145,6 @@ game.gameInit()									// Pre-loading game
 //└────────────────────────────────────────────────────┘
 
 
-//screenSizing()	// Console calibration step
+consoleSizing()	// Console calibration
 mainMenu()			// Program start
 

@@ -15,10 +15,8 @@ class Team
 	
 	var name: 				String			// Must be unique for the game
 	var avatars 			= [Avatar]()	// Array of team avatars
-	var lifePoints 		= 0				// Remaining life points counter for the team -> sum of avatars's life points remaining
-	var pointsSplit		= [Int]()		// Random order of the sets of points assigned to the avatars
-													// -> Allows not to identify the strength of the opponents by default
-
+	var initialLives		= [Int]()		// Initial values of avatars lives
+													
 	init(_ name: String) {
 		self.name 	= name
 	}
@@ -26,11 +24,7 @@ class Team
 	func teamNameUpdate(_ name: String) {
 		self.name	=	name
 	}
-	
-	func teamLifeUpdate(_ points: Int) {
-		self.lifePoints	+=	points
-	}
-	
+		
 	// This method initialises a team with its 3 avatars
 	func teamInit(_ aNames: [String],_ indexArmory: Int)
 	{
@@ -41,12 +35,11 @@ class Team
 		}
 	}
 	
-	// This method initialises team's life points and avatars's points (life, damage, care) for a new game
+	// This method initialises avatars's points (life, damage, care) for a new game
 	func teamPointsInit(_ game: Game)
 	{
 		// Defines the random order of the points sets to be awarded
 		var random					= [Int]()
-		var lifePoints				= 0
 		while random.count 		!= 3 {
 			let randomValue 		= Int.random(in:0...2)
 			if random.count 		== 0 {
@@ -57,12 +50,12 @@ class Team
 			}
 		}
 		// Allocates sets of points to team avatars -> Team1's Avatar1 may not have the same points set as Team2's Avatar1
+		var initalLives		= [Int]()
 		for index in 0..<random.count {
 			self.avatars[index].avatarPointsInit(game.pointsShared[random[index]])
-			lifePoints 	+= self.avatars[index].points[0]
+			initalLives.append(self.avatars[index].points[0])
 		}
-		self.lifePoints	= lifePoints
-		self.pointsSplit	= random
+		self.initialLives	= initalLives
 	}
 	
 	// This method provides an array of formatted strings for display : avatar's nickName + weapon
@@ -100,56 +93,65 @@ class Team
 		return teamAvatarsNWDC
 	}
 	
-	// This method provides the list of avatar's points (life, damage, care) in an array
-	func teamAvatarsLife() -> [Int]
+	// This method provides the list of avatar's points (life, damage, care) and the sum for the team in an array
+	func teamLives() -> [Int]
 	{
-		var avatarsLife	=	[Int]()
+		var teamLives	=	[Int]()
 		for index in 0...2 {
-			avatarsLife.append(self.avatars[index].points[0])
+			teamLives.append(self.avatars[index].points[0])
 		}
-		return avatarsLife
+		teamLives.append(teamLives.reduce(0, +))
+		return teamLives
 	}
 
-	// This method provides an array of formatted strings for display : avatar's life points
-	func teamAvatarsLifeList() -> [String]
+	// This method provides an array of formatted strings for display: avatars & team's life points
+	func teamLifeList(_ full: Bool = false) -> [String]
 	{
 		let space				= 	String(repeating: " ", count: 3)	// 3 is the lenght for theses formated strings
-		var avatarsLifeList	=	[String]()
+		var teamLifeList	=	[String]()
+		var teamLife			= 0
 		for index in 0...2 {
 			if self.avatars[index].points[0] > 0 {
 				switch Game.mode {
 					case 0:		// Game
-						//pointSplit ne contient que l'index dans game/pointsShared. il ne suffot pas de mettre pointSlit[0]
-						let ratio	= Float(self.avatars[index].points[0]) / Float(game.pointsShared[self.pointsSplit[index]][0])
+						// PointSplig allows to manage the indirection between the avatars and their reference point profile.
+						let ratio	= Float(self.avatars[index].points[0]) / Float(self.initialLives[index])
 						let text		= String(String(space + String(repeating: "", count: ratio <= 0.3334 ? 1 : (ratio <= 0.6667 ? 2 : 3))).suffix(3))
-						avatarsLifeList.append(text)
+						teamLifeList.append(text)
 					case 10:		// Display only for a brief time for the current team
 						if teams[Team.current] === self {
-							avatarsLifeList.append(String(String(space + String(self.avatars[index].points[0])).suffix(3)))
+							teamLifeList.append(String(String(space + String(self.avatars[index].points[0])).suffix(3)))
 						} else {
-							let ratio = Float(self.avatars[index].points[0]) / Float(game.pointsShared[self.pointsSplit[index]][0])
+							let ratio = Float(self.avatars[index].points[0]) / Float(self.initialLives[index])
 							let text = String(String(space + String(repeating: "", count: ratio <= 0.3334 ? 1 : (ratio <= 0.6667 ? 2 : 3))).suffix(3))
-							avatarsLifeList.append(text)
+							teamLifeList.append(text)
 						}
 					default:		// Simulator
-						avatarsLifeList.append(String(String(space + String(self.avatars[index].points[0])).suffix(3)))
+						teamLifeList.append(String(String(space + String(self.avatars[index].points[0])).suffix(3)))
 				}
+				teamLife	+= self.avatars[index].points[0]
 			} else {
-				avatarsLifeList.append(" † ")
+				teamLifeList.append(" † ")
 			}
 		}
-		return avatarsLifeList
+		full == true ?	teamLifeList.append(String(String(space + String(teamLife)).suffix(3))) : nilFunc()
+		return teamLifeList
 	}
 	
-	// This method checks that the new name of an avatar doesn't already exist in both team and returns the index if found
-	func teamAvatarDouble(_ name: String) -> Int
+	// This method checks that the new name doesn't already exist in both teams (teams & avatars name) and returns the index if found
+	func nameDouble(_ name: String) -> (Int, Int)
 	{
-		for indexA in 0...self.avatars.count - 1 {
-			if self.avatars[indexA].nickName == name {
-				return indexA
+		for indexT in 0...1 {
+			for indexA in 0...teams[indexT].avatars.count - 1 {
+				if teams[indexT].avatars[indexA].nickName.uppercased() == name.uppercased() {
+					return (indexT,indexA)
+				}
+			}
+			if teams[indexT].name == name {
+				return (indexT, 3)
 			}
 		}
-		return -1
+		return (-1, -1)
 	}
 }
 
